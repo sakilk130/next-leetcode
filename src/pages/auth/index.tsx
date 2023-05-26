@@ -1,11 +1,16 @@
-import { Auth } from '@/components/Modals';
-import { Navbar } from '@/components/Navbar';
 import Image from 'next/image';
 import React from 'react';
+import { useRecoilValue } from 'recoil';
+
+import { authModalAtom } from '@/atoms/authModalAtom';
+import { Auth } from '@/components/Modals';
+import { Navbar } from '@/components/Navbar';
 
 type AuthPageProps = {};
 
 const AuthPage: React.FC<AuthPageProps> = () => {
+  const { isOpen } = useRecoilValue(authModalAtom);
+
   return (
     <div className="relative h-screen bg-gradient-to-b from-gray-600 to-black">
       <div className="mx-auto max-w-7xl">
@@ -21,7 +26,7 @@ const AuthPage: React.FC<AuthPageProps> = () => {
             placeholder="blur"
           />
         </div>
-        <Auth />
+        {isOpen && <Auth />}
       </div>
     </div>
   );
