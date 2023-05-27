@@ -1,9 +1,9 @@
+import { Topbar } from '@/components/Topbar';
+
 export default function Home() {
   return (
-    <main>
-      <h1 className="text-4xl font-bold text-center text-purple-50">
-        Next.js + Tailwind CSS
-      </h1>
+    <main className="min-h-screen bg-dark-layer-2">
+      <Topbar />
     </main>
   );
 }
