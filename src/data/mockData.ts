@@ -1,7 +1,7 @@
 export type Problem = {
   id: string;
   title: string;
-  difficulty: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
   category: string;
   order: number;
   videoId?: string;
@@ -14,7 +14,7 @@ export const problems: Problem[] = [
     difficulty: 'Easy',
     category: 'Array',
     order: 1,
-    videoId: '',
+    videoId: 'KLlXCFG5TnA',
   },
   {
     id: 'reverse-linked-list',
@@ -70,7 +70,7 @@ export const problems: Problem[] = [
     difficulty: 'Easy',
     category: 'Tree',
     order: 8,
-    videoId: '4qYTqOiRMoM',
+    videoId: '',
   },
   {
     id: 'best-time-to-buy-and-sell-stock',
