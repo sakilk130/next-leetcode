@@ -1,15 +1,29 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'next/router';
 
 import { authModalAtom } from '@/atoms/authModalAtom';
 import { Auth } from '@/components/Modals';
 import { Navbar } from '@/components/Navbar';
+import { auth } from '@/config/firebase';
 
 type AuthPageProps = {};
 
 const AuthPage: React.FC<AuthPageProps> = () => {
   const { isOpen } = useRecoilValue(authModalAtom);
+  const router = useRouter();
+  const [user, loading, error] = useAuthState(auth);
+
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (user) router.push('/');
+    if (!loading && !user) setPageLoading(false);
+  }, [user, router, loading]);
+
+  if (pageLoading) return null;
 
   return (
     <div className="relative h-screen bg-gradient-to-b from-gray-600 to-black">
