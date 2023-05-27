@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { toast } from 'react-hot-toast';
 import { useSetRecoilState } from 'recoil';
@@ -43,9 +43,7 @@ const SignUp: React.FC<SignUpProps> = () => {
         inputs.email,
         inputs.password
       );
-      if (!newUser) {
-        throw new Error('Something went wrong! Please try again.');
-      }
+      if (!newUser) return;
       const userData = {
         uid: newUser.user.uid,
         email: newUser.user.email,
@@ -60,11 +58,17 @@ const SignUp: React.FC<SignUpProps> = () => {
       toast.success('Account created successfully!');
       router.push('/');
     } catch (error: any) {
-      toast.error(error.message || 'Something went wrong! Please try again.');
+      toast.error(error.message);
     } finally {
       toast.dismiss(toastId);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message || 'Something went wrong! Please try again.');
+    }
+  }, [error]);
 
   return (
     <form className="px-4 pb-4 space-y-6" onSubmit={handleSubmit}>
