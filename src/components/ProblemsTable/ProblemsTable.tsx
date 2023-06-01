@@ -59,7 +59,7 @@ const ProblemsTable: FC<ProblemsTableProps> = () => {
               </td>
               <td className="px-6 py-4">
                 <Link
-                  href={`/problem/${problem.id}`}
+                  href={`/problems/${problem.id}`}
                   className="cursor-pointer hover:text-blue-600"
                   target="_blank"
                 >
