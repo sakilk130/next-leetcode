@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface LoadingCircleProps {}
 
@@ -26,4 +26,6 @@ const LoadingCircle: React.FC<LoadingCircleProps> = () => {
     </svg>
   );
 };
-export { LoadingCircle };
+
+const MemorizedLoadingCircle = memo(LoadingCircle);
+export { MemorizedLoadingCircle as LoadingCircle };

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useSetRecoilState } from 'recoil';
 
 import { authModalAtom } from '@/atoms/authModalAtom';
@@ -31,4 +31,5 @@ const Navbar: React.FC<NavbarProps> = () => {
     </div>
   );
 };
-export { Navbar };
+const MemorizedNavbar = memo(Navbar);
+export {MemorizedNavbar as Navbar };

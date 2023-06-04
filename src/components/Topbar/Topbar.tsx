@@ -1,14 +1,15 @@
+import cls from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useSetRecoilState } from 'recoil';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { BsList } from 'react-icons/bs';
-import cls from 'classnames';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useSetRecoilState } from 'recoil';
 
 import { authModalAtom } from '@/atoms/authModalAtom';
 import { auth } from '@/config/firebase';
+import { areEqual } from '@/utils/areEqual';
 
 import { Logout } from '../Buttons';
 import { Timer } from '../Timer';
@@ -25,9 +26,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
     authModal((prev) => ({ ...prev, isOpen: true, mode: 'login' }));
   }, [authModal]);
 
-  const handleProblemChange = useCallback((isNext: boolean) => {
-    console.log(isNext);
-  }, []);
+  const handleProblemChange = useCallback((isNext: boolean) => {}, []);
 
   return (
     <nav className="relative flex h-[50px] w-full shrink-0 items-center px-5 bg-dark-layer-1 text-dark-gray-7">
@@ -74,7 +73,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
         <div className="flex items-center justify-end flex-1 space-x-4">
           <div>
             <a
-              href="https://www.buymeacoffee.com/burakorkmezz"
+              href="https://www.buymeacoffee.com/"
               target="_blank"
               rel="noreferrer"
               className="bg-dark-fill-3 py-1.5 px-3 cursor-pointer rounded text-brand-orange hover:bg-dark-fill-2"
@@ -111,4 +110,6 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
     </nav>
   );
 };
-export { Topbar };
+const MemorizedTopbar = memo(Topbar, areEqual);
+
+export { MemorizedTopbar as Topbar };

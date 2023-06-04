@@ -27,4 +27,5 @@ const PlaygroundFooter: React.FC<PlaygroundFooterProps> = () => {
     </div>
   );
 };
-export { PlaygroundFooter };
+const MemorizedPlaygroundFooter = React.memo(PlaygroundFooter);
+export { MemorizedPlaygroundFooter as PlaygroundFooter };

@@ -1,4 +1,10 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
@@ -6,6 +12,7 @@ import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 
 import { ModeType, authModalAtom } from '@/atoms/authModalAtom';
 import { auth } from '@/config/firebase';
+
 import { LoadingCircle } from '../Icons';
 
 interface LoginProps {}
@@ -14,16 +21,22 @@ const Login: React.FC<LoginProps> = () => {
   const authModal = useSetRecoilState(authModalAtom);
   const router = useRouter();
   let toastId: string = '';
+
+  const [inputs, setInputs] = useState<{ email: string; password: string }>({
+    email: '',
+    password: '',
+  });
+
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
-  const [inputs, setInputs] = useState({ email: '', password: '' });
   const handleClick = useCallback(
     (mode: ModeType) => {
       authModal((prev) => ({ ...prev, mode }));
     },
     [authModal]
   );
+
   const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }, []);
@@ -120,4 +133,6 @@ const Login: React.FC<LoginProps> = () => {
     </form>
   );
 };
-export { Login };
+
+const MemorizedLogin = memo(Login);
+export { MemorizedLogin as Login };

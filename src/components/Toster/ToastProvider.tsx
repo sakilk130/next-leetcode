@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 interface ToastProviderProps {}
@@ -26,4 +26,5 @@ const ToastProvider: React.FC<ToastProviderProps> = () => {
   );
 };
 
-export { ToastProvider };
+const MemorizedToastProvider = memo(ToastProvider);
+export { MemorizedToastProvider as ToastProvider };

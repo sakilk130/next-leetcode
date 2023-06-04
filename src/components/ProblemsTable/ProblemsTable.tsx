@@ -1,6 +1,6 @@
 import cls from 'classnames';
 import Link from 'next/link';
-import { FC, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { AiFillYoutube } from 'react-icons/ai';
 import { BsCheckCircle } from 'react-icons/bs';
 import { IoClose } from 'react-icons/io5';
@@ -11,7 +11,7 @@ import { problems } from '@/data/mockData';
 interface ProblemsTableProps {}
 
 const ProblemsTable: FC<ProblemsTableProps> = () => {
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState<boolean>(false);
   const [showVideo, setShowVideo] = useState<{
     show: boolean;
     videoId: string;
@@ -20,12 +20,15 @@ const ProblemsTable: FC<ProblemsTableProps> = () => {
     videoId: '',
   });
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setShowVideo({ show: false, videoId: '' });
-  };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
+    return () => {
+      setMounted(false);
+    };
   }, [mounted]);
 
   useEffect(() => {
@@ -35,7 +38,7 @@ const ProblemsTable: FC<ProblemsTableProps> = () => {
     window.addEventListener('keydown', handleEsc);
 
     return () => window.removeEventListener('keydown', handleEsc);
-  }, []);
+  }, [closeModal]);
 
   return (
     <>
@@ -61,7 +64,6 @@ const ProblemsTable: FC<ProblemsTableProps> = () => {
                 <Link
                   href={`/problems/${problem.id}`}
                   className="cursor-pointer hover:text-blue-600"
-                  target="_blank"
                 >
                   {problem.title}
                 </Link>
@@ -117,4 +119,6 @@ const ProblemsTable: FC<ProblemsTableProps> = () => {
     </>
   );
 };
-export { ProblemsTable };
+
+const MemorizedProblemsTable = memo(ProblemsTable);
+export { MemorizedProblemsTable as ProblemsTable };

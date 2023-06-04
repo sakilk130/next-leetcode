@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth';
 import { toast } from 'react-hot-toast';
 
@@ -10,6 +10,7 @@ type ResetPasswordProps = {};
 
 const ResetPassword: React.FC<ResetPasswordProps> = () => {
   const [email, setEmail] = useState<string>('');
+
   const [sendPasswordResetEmail, sending, error] =
     useSendPasswordResetEmail(auth);
 
@@ -67,4 +68,5 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
     </form>
   );
 };
-export { ResetPassword };
+const MemorizedResetPassword = memo(ResetPassword);
+export { MemorizedResetPassword as ResetPassword };

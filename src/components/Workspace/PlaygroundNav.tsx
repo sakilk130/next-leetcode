@@ -52,5 +52,6 @@ const PlaygroundNav: React.FC<PlaygroundNavProps> = () => {
     </div>
   );
 };
+const MemorizedPlaygroundNav = React.memo(PlaygroundNav);
 
-export { PlaygroundNav };
+export { MemorizedPlaygroundNav as PlaygroundNav };

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { toast } from 'react-hot-toast';
 import { useSetRecoilState } from 'recoil';
@@ -14,14 +14,19 @@ const SignUp: React.FC<SignUpProps> = () => {
   let toastId: string = '';
   const authModal = useSetRecoilState(authModalAtom);
   const router = useRouter();
-  const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
 
-  const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState<{
+    email: string;
+    displayName: string;
+    password: string;
+  }>({
     email: '',
     displayName: '',
     password: '',
   });
+
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -44,6 +49,7 @@ const SignUp: React.FC<SignUpProps> = () => {
         inputs.password
       );
       if (!newUser) return;
+      // TODO: userData value is never used
       const userData = {
         uid: newUser.user.uid,
         email: newUser.user.email,
@@ -144,4 +150,5 @@ const SignUp: React.FC<SignUpProps> = () => {
     </form>
   );
 };
-export { SignUp };
+const MemorizedSignUp = memo(SignUp);
+export { MemorizedSignUp as SignUp };

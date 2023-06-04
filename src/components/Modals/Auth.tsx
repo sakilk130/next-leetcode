@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { useRecoilValue } from 'recoil';
 
 import { authModalAtom } from '@/atoms/authModalAtom';
 import { useCloseModal } from '@/hooks/useCloseModal';
+
 import { Login } from './Login';
 import { ResetPassword } from './ResetPassword';
 import { SignUp } from './SignUp';
@@ -45,4 +46,6 @@ const Auth: React.FC<AuthProps> = () => {
     </>
   );
 };
-export { Auth };
+
+const MemorizedAuth = memo(Auth);
+export { MemorizedAuth as Auth };

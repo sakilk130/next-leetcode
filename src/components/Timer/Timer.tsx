@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { FiRefreshCcw } from 'react-icons/fi';
 
 type TimerProps = {};
@@ -7,7 +7,7 @@ const Timer: React.FC<TimerProps> = () => {
   const [show, setShow] = useState<boolean>(false);
   const [time, setTime] = useState<number>(0);
 
-  const formatTime = (time: number): string => {
+  const formatTime = useMemo(() => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
     const seconds = time % 60;
@@ -15,7 +15,8 @@ const Timer: React.FC<TimerProps> = () => {
     return `${hours < 10 ? '0' + hours : hours}:${
       minutes < 10 ? '0' + minutes : minutes
     }:${seconds < 10 ? '0' + seconds : seconds}`;
-  };
+  }, [time]);
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
@@ -32,7 +33,7 @@ const Timer: React.FC<TimerProps> = () => {
     <div>
       {show ? (
         <div className="flex items-center p-1.5 space-x-2 rounded cursor-pointer bg-dark-fill-3 hover:bg-dark-fill-2">
-          <div>{formatTime(time)}</div>
+          <div>{formatTime}</div>
           <FiRefreshCcw
             onClick={() => {
               setTime(0);
@@ -64,4 +65,5 @@ const Timer: React.FC<TimerProps> = () => {
     </div>
   );
 };
-export { Timer };
+const MemoizedTimer = memo(Timer);
+export { MemoizedTimer as Timer };

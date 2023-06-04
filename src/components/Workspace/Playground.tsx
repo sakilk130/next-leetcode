@@ -73,4 +73,6 @@ const Playground: React.FC<PlaygroundProps> = () => {
     </div>
   );
 };
-export { Playground };
+
+const MemorizedPlayground = React.memo(Playground);
+export { MemorizedPlayground as Playground };
