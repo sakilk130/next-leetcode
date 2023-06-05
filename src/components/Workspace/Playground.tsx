@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Split from 'react-split';
 import CodeMirror from '@uiw/react-codemirror';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { javascript } from '@codemirror/lang-javascript';
+import cls from 'classnames';
 
+import { Problem } from '@/interfaces/problem';
+import { areEqual } from '@/utils/areEqual';
 import { PlaygroundNav } from './PlaygroundNav';
 import { PlaygroundFooter } from './PlaygroundFooter';
 
-type PlaygroundProps = {};
+type PlaygroundProps = {
+  problem: Problem;
+};
 
-const Playground: React.FC<PlaygroundProps> = () => {
+const Playground: React.FC<PlaygroundProps> = ({ problem }) => {
+  const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
+
   return (
     <div className="relative flex flex-col overflow-x-hidden bg-dark-layer-1">
       <PlaygroundNav />
@@ -21,7 +28,7 @@ const Playground: React.FC<PlaygroundProps> = () => {
       >
         <div className="w-full overflow-auto">
           <CodeMirror
-            value="console.log('Hello World!');"
+            value={problem.starterCode}
             theme={vscodeDark}
             extensions={[javascript()]}
             style={{ fontSize: 16 }}
@@ -37,13 +44,20 @@ const Playground: React.FC<PlaygroundProps> = () => {
             </div>
           </div>
           <div className="flex">
-            {[1, 3, 4].map((example, index) => (
-              <div className="items-start mt-2 mr-2" key={index}>
+            {problem.examples.map((example, index) => (
+              <div
+                className="items-start mt-2 mr-2"
+                key={example.id}
+                onClick={() => setActiveTestCaseId(index)}
+              >
                 <div className="flex flex-wrap items-center gap-y-4">
                   <div
-                    className={`font-medium items-center transition-all focus:outline-none inline-flex bg-dark-fill-3 hover:bg-dark-fill-2 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap
-										
-									`}
+                    className={cls(
+                      'font-medium items-center transition-all focus:outline-none inline-flex bg-dark-fill-3 hover:bg-dark-fill-2 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap',
+                      activeTestCaseId === index
+                        ? 'text-white'
+                        : 'text-gray-500'
+                    )}
                   >
                     Case {index + 1}
                   </div>
@@ -54,17 +68,11 @@ const Playground: React.FC<PlaygroundProps> = () => {
           <div className="my-4 font-semibold">
             <p className="mt-4 text-sm font-medium text-white">Input:</p>
             <div className="w-full cursor-text rounded-lg border px-3 py-[10px] bg-dark-fill-3 border-transparent text-white mt-2">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque
-              voluptate exercitationem tempora laboriosam molestias ad totam
-              maxime deserunt quasi sint veritatis nulla nostrum iure,
-              accusantium provident recusandae sequi asperiores officiis?
+              {problem.examples[activeTestCaseId].inputText}
             </div>
             <p className="mt-4 text-sm font-medium text-white">Output:</p>
             <div className="w-full cursor-text rounded-lg border px-3 py-[10px] bg-dark-fill-3 border-transparent text-white mt-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam
-              nesciunt voluptatibus accusantium ducimus et non ut, cupiditate
-              repellat praesentium repudiandae hic odio similique, sapiente quos
-              ipsa vel inventore optio pariatur.
+              {problem.examples[activeTestCaseId].outputText}
             </div>
           </div>
         </div>
@@ -74,5 +82,5 @@ const Playground: React.FC<PlaygroundProps> = () => {
   );
 };
 
-const MemorizedPlayground = React.memo(Playground);
+const MemorizedPlayground = React.memo(Playground, areEqual);
 export { MemorizedPlayground as Playground };
