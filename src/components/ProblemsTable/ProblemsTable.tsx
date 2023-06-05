@@ -6,11 +6,14 @@ import { BsCheckCircle } from 'react-icons/bs';
 import { IoClose } from 'react-icons/io5';
 import YouTubePlayer from 'react-youtube';
 
-import { problems } from '@/data/mockData';
+import { areEqual } from '@/utils/areEqual';
+import useGetProblems from '@/hooks/useGetProblems';
 
-interface ProblemsTableProps {}
+interface ProblemsTableProps {
+  setLoadingProblems: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const ProblemsTable: FC<ProblemsTableProps> = () => {
+const ProblemsTable: FC<ProblemsTableProps> = ({ setLoadingProblems }) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const [showVideo, setShowVideo] = useState<{
     show: boolean;
@@ -19,7 +22,7 @@ const ProblemsTable: FC<ProblemsTableProps> = () => {
     show: false,
     videoId: '',
   });
-
+  const problems = useGetProblems(setLoadingProblems);
   const closeModal = useCallback(() => {
     setShowVideo({ show: false, videoId: '' });
   }, []);
@@ -61,12 +64,22 @@ const ProblemsTable: FC<ProblemsTableProps> = () => {
                 <BsCheckCircle fontSize={'18'} width="18" />
               </td>
               <td className="px-6 py-4">
-                <Link
-                  href={`/problems/${problem.id}`}
-                  className="cursor-pointer hover:text-blue-600"
-                >
-                  {problem.title}
-                </Link>
+                {problem.link ? (
+                  <Link
+                    href={problem.link}
+                    className="cursor-pointer hover:text-blue-600"
+                    target="_blank"
+                  >
+                    {problem.title}
+                  </Link>
+                ) : (
+                  <Link
+                    className="cursor-pointer hover:text-blue-600"
+                    href={`/problems/${problem.id}`}
+                  >
+                    {problem.title}
+                  </Link>
+                )}
               </td>
               <td className={cls('px-6 py-4', difficultyColor)}>
                 {problem.difficulty}
@@ -120,5 +133,5 @@ const ProblemsTable: FC<ProblemsTableProps> = () => {
   );
 };
 
-const MemorizedProblemsTable = memo(ProblemsTable);
+const MemorizedProblemsTable = memo(ProblemsTable, areEqual);
 export { MemorizedProblemsTable as ProblemsTable };
