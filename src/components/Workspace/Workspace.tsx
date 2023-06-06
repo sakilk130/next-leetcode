@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import Split from 'react-split';
 import Confetti from 'react-confetti';
+import Split from 'react-split';
 
-import { Problem } from '@/interfaces/problem';
-import { ProblemDescription } from './ProblemDescription';
-import { Playground } from './Playground';
-import { areEqual } from '@/utils/areEqual';
 import useWindowSize from '@/hooks/useWindowSize';
+import { Problem } from '@/interfaces/problem';
+import { Playground } from './Playground';
+import { ProblemDescription } from './ProblemDescription';
 
 type WorkspaceProps = {
   problem: Problem;
@@ -19,7 +18,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ problem }) => {
 
   return (
     <Split className="split" minSize={0}>
-      <ProblemDescription problem={problem} />
+      <ProblemDescription problem={problem} _solved={solved} />
       <div className="bg-dark-fill-2">
         <Playground
           problem={problem}
@@ -39,5 +38,4 @@ const Workspace: React.FC<WorkspaceProps> = ({ problem }) => {
   );
 };
 
-const MemorizedWorkspace = React.memo(Workspace, areEqual);
-export { MemorizedWorkspace as Workspace };
+export { Workspace };

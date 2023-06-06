@@ -1,8 +1,6 @@
 import React from 'react';
 import { BsChevronUp } from 'react-icons/bs';
 
-import { areEqual } from '@/utils/areEqual';
-
 type PlaygroundFooterProps = {
   handleSubmit: () => void;
 };
@@ -39,5 +37,4 @@ const PlaygroundFooter: React.FC<PlaygroundFooterProps> = ({
     </div>
   );
 };
-const MemorizedPlaygroundFooter = React.memo(PlaygroundFooter, areEqual);
-export { MemorizedPlaygroundFooter as PlaygroundFooter };
+export { PlaygroundFooter };

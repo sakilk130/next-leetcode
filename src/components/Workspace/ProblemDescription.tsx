@@ -1,4 +1,7 @@
-import { memo, useCallback, useState } from 'react';
+import cls from 'classnames';
+import { useCallback, useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { toast } from 'react-hot-toast';
 import {
   AiFillDislike,
   AiFillLike,
@@ -7,16 +10,11 @@ import {
 } from 'react-icons/ai';
 import { BsCheck2Circle } from 'react-icons/bs';
 import { TiStarOutline } from 'react-icons/ti';
-import cls from 'classnames';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { toast } from 'react-hot-toast';
 
-import { Problem } from '@/interfaces/problem';
-import { areEqual } from '@/utils/areEqual';
-import useGetUsersDataOnProblem from '@/hooks/useGetUsersDataOnProblem';
-import useGetCurrentProblem from '@/hooks/useGetCurrentProblem';
-import { CircleSkeleton, RectangleSkeleton } from '../Skeletons';
 import { auth, firestore } from '@/config/firebase';
+import useGetCurrentProblem from '@/hooks/useGetCurrentProblem';
+import useGetUsersDataOnProblem from '@/hooks/useGetUsersDataOnProblem';
+import { Problem } from '@/interfaces/problem';
 import {
   arrayRemove,
   arrayUnion,
@@ -24,12 +22,17 @@ import {
   runTransaction,
   updateDoc,
 } from 'firebase/firestore';
+import { CircleSkeleton, RectangleSkeleton } from '../Skeletons';
 
 type ProblemDescriptionProps = {
   problem: Problem;
+  _solved: boolean;
 };
 
-const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
+const ProblemDescription: React.FC<ProblemDescriptionProps> = ({
+  problem,
+  _solved,
+}) => {
   const [user] = useAuthState(auth);
   const [updating, setUpdating] = useState<boolean>(false);
 
@@ -186,6 +189,7 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
     setCurrentProblem,
     returnUserDataAndProblemData,
   ]);
+
   const handleStar = useCallback(async () => {
     if (!user) {
       toast.error('You must be logged in to star a problem');
@@ -240,9 +244,11 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
                 >
                   {currentProblem.difficulty}
                 </div>
-                <div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-s text-dark-green-s">
-                  <BsCheck2Circle />
-                </div>
+                {(solved || _solved) && (
+                  <div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-s text-dark-green-s">
+                    <BsCheck2Circle />
+                  </div>
+                )}
                 <div
                   className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-dark-gray-6"
                   onClick={handleLike}
@@ -343,5 +349,5 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
     </div>
   );
 };
-const MemorizedProblemDescription = memo(ProblemDescription, areEqual);
-export { MemorizedProblemDescription as ProblemDescription };
+
+export { ProblemDescription };

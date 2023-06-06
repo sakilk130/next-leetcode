@@ -6,7 +6,7 @@ import {
 } from 'react-icons/ai';
 
 import { ISettings } from './Playground';
-import { areEqual } from '@/utils/areEqual';
+import { SettingsModal } from '../Modals';
 
 type PlaygroundNavProps = {
   settings: ISettings;
@@ -79,10 +79,11 @@ const PlaygroundNav: React.FC<PlaygroundNavProps> = ({
           <div className="preferenceBtn-tooltip">Full Screen</div>
         </button>
       </div>
-      {/*  */}
+      {settings.settingsModalIsOpen && (
+        <SettingsModal settings={settings} setSettings={setSettings} />
+      )}
     </div>
   );
 };
-const MemorizedPlaygroundNav = React.memo(PlaygroundNav, areEqual);
 
-export { MemorizedPlaygroundNav as PlaygroundNav };
+export { PlaygroundNav };

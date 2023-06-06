@@ -13,7 +13,6 @@ import { auth, firestore } from '@/config/firebase';
 import { problems } from '@/data/problems';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { Problem } from '@/interfaces/problem';
-import { areEqual } from '@/utils/areEqual';
 import { PlaygroundFooter } from './PlaygroundFooter';
 import { PlaygroundNav } from './PlaygroundNav';
 
@@ -65,7 +64,6 @@ const Playground: React.FC<PlaygroundProps> = ({
           setTimeout(() => {
             setSuccess(false);
           }, 4000);
-
           const userRef = doc(firestore, 'users', user.uid);
           await updateDoc(userRef, {
             solvedProblems: arrayUnion(pid),
@@ -167,5 +165,4 @@ const Playground: React.FC<PlaygroundProps> = ({
   );
 };
 
-const MemorizedPlayground = React.memo(Playground, areEqual);
-export { MemorizedPlayground as Playground };
+export { Playground };
