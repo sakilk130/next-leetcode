@@ -6,10 +6,13 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { BsList } from 'react-icons/bs';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useSetRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
 
 import { authModalAtom } from '@/atoms/authModalAtom';
 import { auth } from '@/config/firebase';
 import { areEqual } from '@/utils/areEqual';
+import { problems } from '@/data/problems';
+import { Problem } from '@/interfaces/problem';
 
 import { Logout } from '../Buttons';
 import { Timer } from '../Timer';
@@ -21,12 +24,37 @@ interface TopbarProps {
 const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
   const [user] = useAuthState(auth);
   const authModal = useSetRecoilState(authModalAtom);
+  const router = useRouter();
 
   const handleClick = useCallback(() => {
     authModal((prev) => ({ ...prev, isOpen: true, mode: 'login' }));
   }, [authModal]);
 
-  const handleProblemChange = useCallback((isNext: boolean) => {}, []);
+  const handleProblemChange = useCallback(
+    (isForward: boolean) => {
+      const { order } = problems[router?.query?.pid as string] as Problem;
+      const direction = isForward ? 1 : -1;
+      const nextProblemOrder = order + direction;
+      const nextProblemKey = Object.keys(problems).find(
+        (key) => problems[key].order === nextProblemOrder
+      );
+
+      if (isForward && !nextProblemKey) {
+        const firstProblemKey = Object.keys(problems).find(
+          (key) => problems[key].order === 1
+        );
+        router.push(`/problems/${firstProblemKey}`);
+      } else if (!isForward && !nextProblemKey) {
+        const lastProblemKey = Object.keys(problems).find(
+          (key) => problems[key].order === Object.keys(problems).length
+        );
+        router.push(`/problems/${lastProblemKey}`);
+      } else {
+        router.push(`/problems/${nextProblemKey}`);
+      }
+    },
+    [router]
+  );
 
   return (
     <nav className="relative flex h-[50px] w-full shrink-0 items-center px-5 bg-dark-layer-1 text-dark-gray-7">
