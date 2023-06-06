@@ -1,13 +1,22 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   AiOutlineFullscreen,
   AiOutlineFullscreenExit,
   AiOutlineSetting,
 } from 'react-icons/ai';
 
-type PlaygroundNavProps = {};
+import { ISettings } from './Playground';
+import { areEqual } from '@/utils/areEqual';
 
-const PlaygroundNav: React.FC<PlaygroundNavProps> = () => {
+type PlaygroundNavProps = {
+  settings: ISettings;
+  setSettings: React.Dispatch<React.SetStateAction<ISettings>>;
+};
+
+const PlaygroundNav: React.FC<PlaygroundNavProps> = ({
+  setSettings,
+  settings,
+}) => {
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
   const handleFullScreen = useCallback(() => {
@@ -17,6 +26,23 @@ const PlaygroundNav: React.FC<PlaygroundNavProps> = () => {
       document.documentElement.requestFullscreen();
     }
     setIsFullScreen(!isFullScreen);
+  }, [isFullScreen]);
+
+  useEffect(() => {
+    function exitHandler(e: any) {
+      if (!document.fullscreenElement) {
+        setIsFullScreen(false);
+        return;
+      }
+      setIsFullScreen(true);
+    }
+
+    if (document.addEventListener) {
+      document.addEventListener('fullscreenchange', exitHandler);
+      document.addEventListener('webkitfullscreenchange', exitHandler);
+      document.addEventListener('mozfullscreenchange', exitHandler);
+      document.addEventListener('MSFullscreenChange', exitHandler);
+    }
   }, [isFullScreen]);
 
   return (
@@ -31,7 +57,12 @@ const PlaygroundNav: React.FC<PlaygroundNavProps> = () => {
         </button>
       </div>
       <div className="flex items-center m-2">
-        <button className="preferenceBtn group">
+        <button
+          className="preferenceBtn group"
+          onClick={() =>
+            setSettings({ ...settings, settingsModalIsOpen: true })
+          }
+        >
           <div className="w-4 h-4 text-lg font-bold text-dark-gray-6">
             <AiOutlineSetting />
           </div>
@@ -52,6 +83,6 @@ const PlaygroundNav: React.FC<PlaygroundNavProps> = () => {
     </div>
   );
 };
-const MemorizedPlaygroundNav = React.memo(PlaygroundNav);
+const MemorizedPlaygroundNav = React.memo(PlaygroundNav, areEqual);
 
 export { MemorizedPlaygroundNav as PlaygroundNav };

@@ -1,6 +1,7 @@
 import { doc, getDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+
 import { auth, firestore } from '@/config/firebase';
 
 const useGetUsersDataOnProblem = (problemId: string) => {
