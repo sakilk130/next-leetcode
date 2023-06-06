@@ -3,9 +3,10 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { toast } from 'react-hot-toast';
 import { useSetRecoilState } from 'recoil';
+import { doc, setDoc } from 'firebase/firestore';
 
 import { authModalAtom } from '@/atoms/authModalAtom';
-import { auth } from '@/config/firebase';
+import { auth, firestore } from '@/config/firebase';
 import { LoadingCircle } from '../Icons';
 
 type SignUpProps = {};
@@ -49,7 +50,6 @@ const SignUp: React.FC<SignUpProps> = () => {
         inputs.password
       );
       if (!newUser) return;
-      // TODO: userData value is never used
       const userData = {
         uid: newUser.user.uid,
         email: newUser.user.email,
@@ -61,6 +61,7 @@ const SignUp: React.FC<SignUpProps> = () => {
         solvedProblems: [],
         starredProblems: [],
       };
+      await setDoc(doc(firestore, 'users', newUser.user.uid), userData);
       toast.success('Account created successfully!');
       router.push('/');
     } catch (error: any) {
