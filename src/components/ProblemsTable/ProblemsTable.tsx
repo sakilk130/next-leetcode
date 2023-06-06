@@ -8,6 +8,7 @@ import YouTubePlayer from 'react-youtube';
 
 import { areEqual } from '@/utils/areEqual';
 import useGetProblems from '@/hooks/useGetProblems';
+import useGetSolvedProblems from '@/hooks/useGetSolvedProblems';
 
 interface ProblemsTableProps {
   setLoadingProblems: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,6 +24,7 @@ const ProblemsTable: FC<ProblemsTableProps> = ({ setLoadingProblems }) => {
     videoId: '',
   });
   const problems = useGetProblems(setLoadingProblems);
+  const solvedProblems = useGetSolvedProblems();
   const closeModal = useCallback(() => {
     setShowVideo({ show: false, videoId: '' });
   }, []);
@@ -61,7 +63,9 @@ const ProblemsTable: FC<ProblemsTableProps> = ({ setLoadingProblems }) => {
               )}
             >
               <td className="px-2 py-3 font-medium whitespace-nowrap text-dark-green-s">
-                <BsCheckCircle fontSize={'18'} width="18" />
+                {solvedProblems.includes(problem.id) && (
+                  <BsCheckCircle fontSize={'18'} width="18" />
+                )}
               </td>
               <td className="px-6 py-4">
                 {problem.link ? (
